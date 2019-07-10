@@ -1,0 +1,13 @@
+body {
+    margin: 0px;
+    color: $mywhite;
+    font-family: 'DM Serif Text', serif;
+}
+
+.container{
+    display: grid;
+    grid-template-columns: 1fr;
+}
+// font-family: 'DM Serif Text', serif;
+// font-family: 'Literata', serif;
+// font-family: 'Seaweed Script', cursive;
