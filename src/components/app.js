@@ -13,6 +13,7 @@ import About from './pages/about';
 import Contact from './pages/contact';
 import Blog from './pages/blog';
 import PortfolioDetail from './portfolio/portfolio-detail';
+import PortfolioManager from './pages/portfolio-manager';
 import Auth from './pages/auth';
 import NoMatch from "./pages/no-match";
 
@@ -40,10 +41,10 @@ export default class App extends Component {
     })
   }
   
-  handleSuccessfulLogout(){
+  handleSuccessfulLogout() {
     this.setState({
       loggedInStatus: "NOT_LOGGED_IN"
-    })
+    });
   }
 
   checkLoginStatus(){
@@ -57,6 +58,7 @@ export default class App extends Component {
       //If loggedIn and status LOGGED_IN => return data
       //If loggedIn status NOT_LOGGED_IN => update status
       //If not loggedIn and status LOGGED_IN => update status
+
       if (loggedIn && loggedInStatus === "LOGGED_IN"){
         return loggedIn;
       } else if (loggedIn && loggedInStatus === "NOT_LOGGED_IN"){
@@ -79,7 +81,7 @@ export default class App extends Component {
 
   authorizedPages(){
     return [
-      <Route path="/blog" component={Blog}/>
+      <Route path="/portfolio-manager" component={PortfolioManager}/>
     ]
   }
 
@@ -90,11 +92,8 @@ export default class App extends Component {
           <div>        
             <NavigationContainer 
             loggedInStatus={this.state.loggedInStatus}
-            handleSuccessfulLogout={this.state.handleSuccessfulLogout}
+            handleSuccessfulLogout={this.handleSuccessfulLogout}
             />
-
-            <h2>{this.state.loggedInStatus}</h2>
-
             <Switch>
               <Route exact path="/" component={Home}/>
 
@@ -111,8 +110,15 @@ export default class App extends Component {
               
               <Route path="/about-me" component={About}/>
               <Route path="/contact" component={Contact}/>
-              {this.state.loggedInStatus === "LOGGED_IN" ? this.authorizedPages() : null}
-              <Route exact path="/portfolio/:slug" component={PortfolioDetail}/>
+              {this.state.loggedInStatus === "LOGGED_IN" ?
+                (this.authorizedPages() 
+              ): null}
+              <Route path="/blog" component={Blog}/>
+              <Route 
+                exact 
+                path="/portfolio/:slug" 
+                component={PortfolioDetail}
+              />
               <Route component={NoMatch}/>
             </Switch>
           </div>
