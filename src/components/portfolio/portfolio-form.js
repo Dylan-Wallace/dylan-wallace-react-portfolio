@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 
 export default class PortfolioForm extends Component{
     constructor(props){
@@ -17,14 +18,15 @@ export default class PortfolioForm extends Component{
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    buildForm(){
+    buildForm() {
         let formData = new FormData();
-
-        formData.append("porfolio_item[name]", this.state.name);
-        formData.append("porfolio_item[description]", this.state.description);
-        formData.append("porfolio_item[url]", this.state.url);
-        formData.append("porfolio_item[category]", this.state.category);
-
+        
+        formData.append("portfolio_item[name]", this.state.name);
+        formData.append("portfolio_item[description]", this.state.description);
+        formData.append("portfolio_item[url]", this.state.url);
+        formData.append("portfolio_item[category]", this.state.category);
+        formData.append("portfolio_item[position]", this.state.position);
+        
         return formData;
     }
 
@@ -35,12 +37,22 @@ export default class PortfolioForm extends Component{
         });
     }
 
-    handleSubmit(event){
-        console.log("Handle Submit", event);
-        this.buildForm();
+    handleSubmit(event) {
+        axios
+          .post(
+            "https://wallace.devcamp.space/portfolio/portfolio_items",
+            this.buildForm(),
+            { withCredentials: true }
+          )
+          .then(response => {
+            console.log("response", response);
+          })
+          .catch(error => {
+            console.log("portfolio form handleSubmit error", error);
+          });
+    
         event.preventDefault();
-
-    }
+      }
 
     render(){
         return(
@@ -72,18 +84,24 @@ export default class PortfolioForm extends Component{
                         value={this.state.position}
                         onChange={this.handleChange}
                         />
-
-                        <input
-                        type="text"
+                    
+                        <select
                         name="category"
-                        placeholder="Category"
                         value={this.state.category}
                         onChange={this.handleChange}
-                        />
+                        >
+                            <option  value="Fonts">Fonts</option>
+                            <option  value="Class">Class</option>
+                            <option  value="Games">Games</option>
+                            <option  value="How To">How To</option>
+                            <option  value="About">About</option>
+                            <option  value="Resources">Resources</option>
+                            <option  value="Others">Others</option>
+                        </select>
                     </div>
                     <div>
                         
-                    <input
+                    <textarea
                         type="text"
                         name="description"
                         placeholder="Place Your Description Here"

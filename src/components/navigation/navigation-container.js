@@ -69,9 +69,7 @@ const NavigationComponent = (props) => {
                 {false ? <button>Add Blog</button> : null}
             </div>
             <div className="right-side">
-            <i class="far fa-clock"></i> {moment().format('MMMM Do YYYY, h:mm:ss a')}
-                DYLAN WALLACE 
-                {props.loggedInStatus === "LOGGED_IN" ? (
+            <i className="far fa-clock"></i> {moment().format('MMMM Do YYYY, h:mm:ss a')} DYLAN WALLACE {props.loggedInStatus === "LOGGED_IN" ? (
                 <a onClick={handleSignOut}>Sign Out</a>
                 ) : null}
             </div>
