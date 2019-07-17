@@ -9,17 +9,54 @@ export default class PortfolioManager extends Component {
         super();
 
         this.state={
-            portfolioItems: []
+            portfolioItems: [],
+            portfolioToEdit: {}
         }
 
         this.handleSuccessfulFormSubmission = this.handleSuccessfulFormSubmission.bind(this);
         this.handleFormSubmissionError = this.handleFormSubmissionError.bind(this);
+        this.handleDeleteClick = this.handleDeleteClick.bind(this);
+        this.handleEditClick = this.handleEditClick.bind(this);
+        
+        this.clearPortfolioToEdit = this.clearPortfolioToEdit.bind(this);
+    }
+    clearPortfolioToEdit(){
+        this.setState({
+            portfolioToEdit: {}
+        })
     }
 
-    handleSuccessfulFormSubmission(portfolioItems){
-        //TODO
-        //Update the portfolioItems state
-        // and add the portfolioItems to the list
+    handleEditClick(portfolioItem){
+        console.log("handleEditClick", portfolioItem)
+        this.setState({
+            portfolioToEdit: portfolioItem
+        });
+
+    }
+
+    handleDeleteClick(portfolioItem){
+        console.log("handleDeleteClick", portfolioItem);
+        axios.delete(
+            `https://api.devcamp.space/portfolio/portfolio_items/${portfolioItem.id}`,
+            {withCredentials: true}
+        ).then(response =>{
+            console.log("Reponse From Get handleDeleteClick", response);
+            this.setState({
+                portfolioItems: this.state.portfolioItems.filter(item => {
+                    return item.id !== portfolioItem.id;
+                })
+            })
+            return response.data;
+        }).catch(error => {
+            console.log("handleDeleteClick Error", error);
+        })
+    }
+
+    handleSuccessfulFormSubmission(portfolioItem){
+        this.setState({
+            portfolioItems: [portfolioItem].concat(this.state.portfolioItems)
+        })
+        console.log("handleSuccessfulFormSubmission", portfolioItem);
     }
 
     handleFormSubmissionError(error){
@@ -27,7 +64,7 @@ export default class PortfolioManager extends Component {
     }
 
     getPortfolioItems(){
-        axios.get("https://wallace.devcamp.space/portfolio/portfolio_items", {
+        axios.get("https://wallace.devcamp.space/portfolio/portfolio_items?order_by=created_at&direction=desc", {
             withCredentials: true
         }).then(response => {
             console.log("reponse from get portfolio items", response);
@@ -50,11 +87,17 @@ export default class PortfolioManager extends Component {
               <PortfolioForm 
               handleSuccessfulFormSubmission={this.handleSuccessfulFormSubmission}
               handleFormSubmissionError={this.handleFormSubmissionError}
+              clearPortfolioToEdit={this.clearPortfolioToEdit}
+              portfolioToEdit={this.setState.portfolioToEdit}
               />
           </div>
 
           <div className="right-column">
-              <PortfolioSidebarList data={this.state.portfolioItems}/>
+              <PortfolioSidebarList 
+                handleDeleteClick={this.handleDeleteClick}
+                data={this.state.portfolioItems}
+                handleEditClick={this.handleEditClick}
+              />
           </div>
       </div>
     );

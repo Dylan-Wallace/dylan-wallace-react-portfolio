@@ -5,8 +5,44 @@
         .portfolio-thumb-img img{ 
             width: 100%;
         }
-        .title{
-            color: goldenrod;
+        .text-content{
+            .title{
+                color: goldenrod;
+                font-size: 1.5em;
+            }
+            .description{
+                color: black;
+                font-size: 0.8em;
+                padding-left: 10px;
+            }
+            .url{
+                color: rgb(78, 78, 78);
+                font-size: 0.8em;
+                padding-left: 15px;
+            }
+            .delete-icon{
+                cursor: pointer;
+                color: rgb(161, 161, 161);
+                font-size: 0.8em;
+                transition: 0.5s ease-in-out;
+                padding-left: 5px;
+                &:hover{
+                    color: rgb(206, 5, 5);
+                }
+            }
+            .edit-icon{
+                cursor: pointer;
+                color: rgb(161, 161, 161);
+                font-size: 0.8em;
+                transition: 0.5s ease-in-out;
+                padding-left: 20px;
+                &:hover{
+                    color: goldenrod;
+                }
+                &:active{
+                    color: black;
+                }
+            }
         }
     }
 }

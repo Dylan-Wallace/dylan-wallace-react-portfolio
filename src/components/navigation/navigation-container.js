@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { withRouter } from "react-router";
 import {NavLink} from "react-router-dom";
 import moment from "moment";
@@ -70,7 +71,9 @@ const NavigationComponent = (props) => {
             </div>
             <div className="right-side">
             <i className="far fa-clock"></i> {moment().format('MMMM Do YYYY, h:mm:ss a')} DYLAN WALLACE {props.loggedInStatus === "LOGGED_IN" ? (
-                <a onClick={handleSignOut}>Sign Out</a>
+                <a onClick={handleSignOut}> 
+                    <FontAwesomeIcon icon="sign-out-alt" />
+                </a>
                 ) : null}
             </div>
         </div>

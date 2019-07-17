@@ -1,0 +1,46 @@
+textarea{
+    border: 1px solid goldenrod;
+    font-family: 'DM Serif Text', serif;
+    font-weight: 400;
+    color: gray;
+    background-color: transparent;
+    font-size: 0.9rem;
+    height: 100px;
+    outline: none;
+    padding: 10px;
+    transition: 0.5s all ease-in-out;
+    border-radius: 4px;
+    
+    &:focus{
+        background-color: rgb(78, 78, 78);
+        color: goldenrod;
+    }
+    &:hover{
+        background-color: rgb(78, 78, 78);
+        color: goldenrod;
+    }
+}
+.select-element{
+    cursor: pointer;
+    border-top: transparent;
+    border-right: transparent;
+    border-left: transparent;
+    border-bottom: 1px solid goldenrod;
+    color: gray;
+    font-size: 1.1rem;
+    width: 100%;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: transparent;
+    outline: none;
+    transition: 0.5s all ease-in-out;
+
+    &:focus{
+        background-color: rgb(78, 78, 78);
+        color: goldenrod;
+    }
+    &:hover{
+        background-color: rgb(78, 78, 78);
+        color: goldenrod;
+    }
+}

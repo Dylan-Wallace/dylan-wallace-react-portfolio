@@ -8,6 +8,16 @@
     }
 
     .right-side{
+        a{
+            margin-left: 15px;
+            cursor: pointer;
+            color: white;
+            transition: 0.5s ease-in-out;
+
+            &:hover{
+                color: goldenrod;
+            }
+        }
         margin-right: 20px;
     }
     .nav-link-wrapper{
