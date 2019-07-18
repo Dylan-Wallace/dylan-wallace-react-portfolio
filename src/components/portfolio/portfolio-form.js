@@ -13,10 +13,14 @@ export default class PortfolioForm extends Component{
             name:"",
             description:"",
             category:"Games",
+            position: "",
             url: "",
             thumb_image:"",
             banner_image:"",
-            logo:""
+            logo:"",
+            editMode: false,
+            apiUrl: "https://wallace.devcamp.space/portfolio/portfolio_items",
+            apiAction: "post"
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -32,32 +36,38 @@ export default class PortfolioForm extends Component{
         this.logoRef = React.createRef();
     }
 
-    componentDidUpdate(){
+    componentDidUpdate() {
         if (Object.keys(this.props.portfolioToEdit).length > 0) {
-            const {
-                id,
-                name,
-                description,
-                category,
-                position,
-                url,
-                thumb_image_url,
-                banner_image_url,
-                logo_url
-           } = this.props.portfolioToEdit;
-
-           this.props.clearPortfolioToEdit();
-
-           this.setState({
+          const {
+            id,
+            name,
+            description,
+            category,
+            position,
+            url,
+            thumb_image_url,
+            banner_image_url,
+            logo_url
+          } = this.props.portfolioToEdit;
+    
+          this.props.clearPortfolioToEdit();
+    
+          this.setState({
             id: id,
             name: name || "",
             description: description || "",
             category: category || "eCommerce",
             position: position || "",
-            url: url || ""
+            url: url || "",
+            editMode: true,
+            apiUrl: `https://wallace.devcamp.space/portfolio/portfolio_items/${id}`,
+            apiAction: "patch",
+            thumb_image: thumb_image_url || "",
+            banner_image: banner_image_url || "",
+            logo: logo_url || ""
           });
         }
-    }
+      }
 
     handleThumbDrop() {
         return{
@@ -124,34 +134,42 @@ export default class PortfolioForm extends Component{
     }
 
     handleSubmit(event) {
-        axios
-          .post(
-            "https://wallace.devcamp.space/portfolio/portfolio_items",
-            this.buildForm(),
-            { withCredentials: true }
-          )
-          .then(response => {
-                this.props.handleSuccessfulFormSubmission(response.data.portfolio_item);
-                console.log("response", response);
+        axios({
+            method: this.state.apiAction,
+            url: this.state.apiUrl,
+            data: this.buildForm(),
+            withCredentials: true
+        })
+        .then(response => {
+            if (this.state.editMode){
+                this.props.handleEditFormSubmission();
+            } else {
+                this.props.handleNewFormSubmission(response.data.portfolio_item);
+            }
+            console.log("response", response);
 
-                this.setState({
-                    name:"",
-                    description:"",
-                    category:"Games",
-                    url: "",
-                    thumb_image:"",
-                    banner_image:"",
-                    logo:""
-                    
-                });
+            this.setState({
+                name:"",
+                description:"",
+                category:"Games",
+                position: "",
+                url: "",
+                thumb_image:"",
+                banner_image:"",
+                logo:"",
+                editMode: false,
+                apiUrl: "https://wallace.devcamp.space/portfolio/portfolio_items",
+                apiAction: "post"
+                
+            });
 
-                [this.thumbRef, this.bannerRef, this.logoRef].forEach(ref =>{
-                    ref.current.dropzone.removeAllFiles();
-                });
-          })
-          .catch(error => {
+            [this.thumbRef, this.bannerRef, this.logoRef].forEach(ref =>{
+                ref.current.dropzone.removeAllFiles();
+            });
+        })
+        .catch(error => {
             console.log("portfolio form handleSubmit error", error);
-          });
+        });
     
         event.preventDefault();
       }
@@ -211,23 +229,26 @@ export default class PortfolioForm extends Component{
                         />
                     </div>
 
-                    <div className="image-uploaders">
-                        <DropzoneComponent 
-                        ref={this.thumbRef}
-                        config={this.componentConfig()}
-                        djsConfig={this.djsConfig()}
-                        eventHandlers={this.handleThumbDrop()}
+                    <div className="image-uploaders"> 
+                        {this.state.thumb_image && this.state.editMode ? (
+                            <img src={this.state.thumb_image} />
+                        ) : (
+                        <DropzoneComponent  
+                            ref={this.thumbRef}
+                            config={this.componentConfig()}
+                            djsConfig={this.djsConfig()}
+                            eventHandlers={this.handleThumbDrop()}
                         >
                             <div className="dz-message"> 
                                 Thumbnail
                             </div>
                         </DropzoneComponent>
-
+                        )}
                         <DropzoneComponent
-                        ref={this.bannerRef}
-                        config={this.componentConfig()}
-                        djsConfig={this.djsConfig()}
-                        eventHandlers={this.handleBannerDrop()}
+                            ref={this.bannerRef}
+                            config={this.componentConfig()}
+                            djsConfig={this.djsConfig()}
+                            eventHandlers={this.handleBannerDrop()}
                         >
                             <div className="dz-message"> 
                                 Banner
@@ -235,10 +256,10 @@ export default class PortfolioForm extends Component{
                         </DropzoneComponent>    
                 
                         <DropzoneComponent
-                        ref={this.logoRef} 
-                        config={this.componentConfig()}
-                        djsConfig={this.djsConfig()}
-                        eventHandlers={this.handleLogoDrop()}
+                            ref={this.logoRef} 
+                            config={this.componentConfig()}
+                            djsConfig={this.djsConfig()}
+                            eventHandlers={this.handleLogoDrop()}
                         >
                             <div className="dz-message"> 
                                 Logo
